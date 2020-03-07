@@ -24,12 +24,14 @@ text_processing/
 
 2. Go to the new package folder and create a git repository:
 
+```
 cd text_processing
 git init .
 git add .
 git status
 # check everything is there :)
 git commit -m "Initial skeleton."
+```
 
 3. Go to github and create a git repository `text_preprocessing` 
 (**WARNING**: do not create a README.md or .gitinore file)
@@ -41,7 +43,7 @@ git push -u origin master
 
 5. Let's set up a conda environment for this project:
 
-conda create -n text_preprocessing Python=3.7
+`conda create -n text_preprocessing Python=3.7`
 
 6. We are now ready to start coding. We will create a `bow_embed` function in an embeddings.py module:
 
