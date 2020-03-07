@@ -1,18 +1,26 @@
-# text_preprocessingPracticing everything we've learned on git, env management, makefiles, templates and python
-------------------------------------------------------------------------------------------
+# text_preprocessing
+----------------------
+
+This is a project to practice some of the things
+ we've learned on git, env management, makefiles,
+ templates and python during the [2020 ML in Prod training](mlinproduction.github.io). 
 
 We will build a library (package) to perform a different type of "embedding" (conversion
 from text to arrays), and integrate it into the capstone project. While we do it, we will 
 practice with many of the tools we have been learning.
 
-1. Create a `text_preprocessing` package using the `XXX` template
+1. Create a `text_preprocessing` package using an existing cookiecutter template
+or manually, with the following structure and empty files:
 
+```bash
 text_processing/
 ... text_processing/
 ....... __init__.py
 ... tests/
 ....... .gitkeep
 ... setup.py 
+... README.md
+```
 
 2. Go to the new package folder and create a git repository:
 
@@ -20,26 +28,16 @@ cd text_processing
 git init .
 git add .
 git status
-git add tests/.gitkeep
-
+# check everything is there :)
 git commit -m "Initial skeleton."
 
-3. Go to github and create a git repository `text_preprocessing`
+3. Go to github and create a git repository `text_preprocessing` 
+(**WARNING**: do not create a README.md or .gitinore file)
 
 4. Add the remote to your local git repository
 
 git remote add origin https://github.com/atibaup/text_preprocessing.git
 git push -u origin master
-
-git clone https://github.com/atibaup/text_preprocessing.git text_preprocessing_2
-cd text_preprocessing
-rm -Rf .git
-cp -R text_preprocessing/* text_preprocessing_2
-
-git add .
-git status
-git commit -m "Initial skeleton."
-git push origin master
 
 5. Let's set up a conda environment for this project:
 
@@ -47,29 +45,43 @@ conda create -n text_preprocessing Python=3.7
 
 6. We are now ready to start coding. We will create a `bow_embed` function in an embeddings.py module:
 
+```python
+import numpy as np
+import hashlib
+
+OTHER_TOKEN = "__OTHER__"
+EMPTY_TOKEN = "__EMPTY__"
+VOCABULARY = ['python', 'java', 'sql', 'delphi', 'c++', OTHER_TOKEN, EMPTY_TOKEN]
+
+def tokenize(doc):
+    return doc.split()
 
 def bow_embed(documents):
-	"""
-	takes a list of documents (lists of strings) and returns
-	a numpy array of shape n_documents x n_tokens
-	"""
-
-VOCABULARY = ['python', 'java', 'sql', 'delphi', 'c++', "__OTHER__", "__EMPTY__"]
-
-def bow_embed(texts):
-	# returns a bag of word representation of each line in texts
-	# 1. tokenize
-	# 2. binarize
-	# 3. map to an array
+    embedded_docs = []
+    for document in documents:
+        tokenized_doc = tokenize(document)
+        embedded_doc = np.zeros(len(VOCABULARY))
+        for token in tokenized_doc:
+            if token in VOCABULARY:
+                embedded_doc[VOCABULARY.index(token)] = 1
+            else:
+                embedded_doc[VOCABULARY.index(OTHER_TOKEN)] = 1
+        if np.alltrue(embedded_doc == 0.0):
+            embedded_doc[VOCABULARY.index(EMPTY_TOKEN)] = 1
+        embedded_docs.append(embedded_doc)
+    return np.array(embedded_docs)
+```
 
 7. We will now add unit tests to make sure this function is running well
 
+```python
 class TestEmbedding(unittest.TestCase):
 	def test_bow_embed_on_empty_texts(self):
 		pass
 
 	def test_bow_embed_on_single_words(self):
 		pass
+```
 
 > Advanced 1: use parameterized
 
@@ -80,12 +92,13 @@ class TestEmbedding(unittest.TestCase):
 10. We will make the changes in `train.py` to now use and test our new `bow_embedding`
 
 from CLI: 
-pip install git+https://github.com/django/django.git@45dfb3641aa4d9828a7c5448d11aa67c7cbd7966#egg=django[argon2]
 
-in conda env:
+> pip install git+https://github.com/django/django.git@45dfb3641aa4d9828a7c5448d11aa67c7cbd7966#egg=django[argon2]
 
-- pip:
-     - "--editable=git+https://github.com/pythonforfacebook/facebook-sdk.git@8c0d34291aaafec00e02eaa71cc2a242790a0fcc#egg=facebook_sdk-master"
+in conda env, add those lines to the conda env yml:
+
+> - pip:
+>     - "--editable=git+https://github.com/pythonforfacebook/facebook-sdk.git@8c0d34291aaafec00e02eaa71cc2a242790a0fcc#egg=facebook_sdk-master"
 
 
 [Bonus]
