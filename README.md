@@ -77,12 +77,17 @@ def bow_embed(documents):
 7. We will now add unit tests to make sure this function is running well
 
 ```python
+import unittest
+
 class TestEmbedding(unittest.TestCase):
 	def test_bow_embed_on_empty_texts(self):
 		pass
 
 	def test_bow_embed_on_single_words(self):
 		pass
+		
+if __name__ == '__main__':
+    unittest.main()
 ```
 
 > Advanced 1: use parameterized
