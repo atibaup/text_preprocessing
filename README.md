@@ -92,6 +92,18 @@ if __name__ == '__main__':
 
 > Advanced 1: use parameterized
 
+```python
+# contents of setup.py
+from setuptools import setup
+
+setup(
+    name='text_preprocessing',
+    version='0.0.1',
+    packages=['text_preprocessing'],
+    install_requires=['numpy >1.16,<2.0']
+)
+```
+
 8. When we are happy and our tests pass, we will commit the changes 
 
 9. We will now add our package as a dependency of the `train` package in the capstone project
